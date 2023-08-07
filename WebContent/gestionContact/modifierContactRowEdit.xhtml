@@ -1,0 +1,108 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+
+</h:head>
+
+<h:form id="helloForm">
+
+	<p:separator></p:separator>
+	<h2 style="text-align: center;">Consultation Des Contacts</h2>
+	<p:separator></p:separator>
+
+	<p:growl id="msgs" showDetail="true" />
+
+	<p:dataTable id="listeTable" var="varCt" value="#{ctB.listContact}"
+		editable="true">
+
+		<f:facet name="header">
+           Row Editing
+       </f:facet>
+
+		<p:ajax event="rowEdit" listener="#{ctB.onRowEdit}"
+			update=":helloForm:msgs" />
+		<p:ajax event="rowEditCancel" listener="#{ctB.onRowCancel}"
+			update=":helloForm:msgs" />
+
+
+		<p:column headerText="Matricule">
+			<p:cellEditor>
+				<f:facet name="output">
+					<h:outputText value="#{varCt.numMatCnt}" />
+				</f:facet>
+				<f:facet name="input">
+					<p:inputText value="#{varCt.numMatCnt}" />
+				</f:facet>
+			</p:cellEditor>
+		</p:column>
+		<p:column headerText="Nom">
+			<p:cellEditor>
+				<f:facet name="output">
+					<h:outputText value="#{varCt.nomNomCnt}" />
+				</f:facet>
+				<f:facet name="input">
+					<p:inputText value="#{varCt.nomNomCnt}" />
+				</f:facet>
+			</p:cellEditor>
+		</p:column>
+		<p:column headerText="Prenom">
+			<p:cellEditor>
+				<f:facet name="output">
+					<h:outputText value="#{varCt.nomPrnCnt}" />
+				</f:facet>
+
+
+				<f:facet name="input">
+					<p:inputText value="#{varCt.nomPrnCnt}" />
+				</f:facet>
+
+
+			</p:cellEditor>
+		</p:column>
+		<p:column headerText="GSM">
+			<p:cellEditor>
+				<f:facet name="output">
+					<h:outputText value="#{varCt.numGsmCnt}" />
+				</f:facet>
+
+				<f:facet name="input">
+					<p:inputText value="#{varCt.numGsmCnt}" />
+				</f:facet>
+
+			</p:cellEditor>
+		</p:column>
+
+		<p:column headerText="Email">
+			<p:cellEditor>
+				<f:facet name="output">
+					<h:outputText value="#{varCt.adrEmailCnt}" />
+				</f:facet>
+
+				<f:facet name="input">
+					<p:inputText value="#{varCt.adrEmailCnt}" />
+				</f:facet>
+
+
+			</p:cellEditor>
+		</p:column>
+
+		<p:column style="width:32px">
+			<p:rowEditor />
+		</p:column>
+	</p:dataTable>
+
+	<h:panelGrid style="display:block; text-align:center" columns="3">
+		<p:commandButton value="Quitter" action="#{ctB.quitter}"
+			immediate="true" icon="ui-icon-circle-arrow-w"></p:commandButton>
+
+	</h:panelGrid>
+
+</h:form>
+
+</html>
+

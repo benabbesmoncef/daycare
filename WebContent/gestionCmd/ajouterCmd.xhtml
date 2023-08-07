@@ -1,0 +1,153 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+
+</h:head>
+<h:body>
+	<h:form id="form" prependId="false">
+		<p:separator></p:separator>
+		<h2 style="text-align: center;">Gestion Commande</h2>
+		<p:separator></p:separator>
+
+
+		<p:outputPanel id="newDetailCmdPanel" style="text-align:center;">
+			<h:panelGrid columns="2" cellpadding="5" id="panelPP">
+
+				<p:outputLabel value="Date création" />
+				<p:outputLabel value="#{cmdB.cmd.datCreCmd}" />
+
+				<p:outputLabel value="Prix Total" />
+				<p:outputLabel value="#{cmdB.cmd.prixTotalCmd}" />
+
+			</h:panelGrid>
+			<p:separator></p:separator>
+
+			<h:panelGrid style="display:block; text-align:center" columns="3">
+				<p:commandButton value="Quitter" action="#{cmdB.quitter}"
+					immediate="true" icon="ui-icon-check"></p:commandButton>
+				<p:commandButton value="Annuler" action="#{cmdB.annuler}"
+					update=":form:newDetailCmdPanel, :form:panelConsultCmd" immediate="true"
+					icon="ui-icon-check"></p:commandButton>
+				<p:commandButton value="Save"
+					action="#{cmdB.addCmd}"
+					update="newDetailCmdPanel, panelConsultCmd, listeTable" icon="ui-icon-check" />
+			</h:panelGrid>
+
+
+
+		</p:outputPanel>
+
+		<p:fieldset id="panelConsultCmd" legend="Gestion Des Cmd"
+			toggleable="true" toggleSpeed="500" collapsed="false">
+
+
+			<p:menuButton value="+">
+				<p:menuitem value="Nouveau Détail CMD"
+					action="#{cmdB.annulerDetail}"
+					update="@([id$=newDetailCmdDialogForm])"
+					onclick="PF('newDetailCmdDialog').show()" />
+			</p:menuButton>
+
+
+			<p:dataTable id="listeTable" var="varServ"
+				value="#{cmdB.listDetailCmd}" widgetVar="cellCars"
+				style="margin-bottom:20px" multiViewState="true"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="5,10,15" rows="10" paginator="true">
+				<f:facet name="header">
+        			Détail CMD
+				</f:facet>
+
+				<p:column headerText="Article" sortBy="#{varServ.article.libArtArt}"
+					filterBy="#{varServ.article.libArtArt}" filterMatchMode="contains">
+					<h:outputText value="#{varServ.article.libArtArt}" />
+				</p:column>
+
+				<p:column headerText="Qté Cmd" sortBy="#{varServ.qteCmdArt}"
+					filterBy="#{varServ.qteCmdArt}" filterMatchMode="contains">
+					<h:outputText value="#{varServ.qteCmdArt}" />
+				</p:column>
+
+				<p:column headerText="Prix Total" sortBy="#{varServ.prixTotalArt}"
+					filterBy="#{varServ.prixTotalArt}" filterMatchMode="contains">
+					<h:outputText value="#{varServ.prixTotalArt}" />
+				</p:column>
+
+
+				<p:column headerText="Suppression"
+					style="width:90px;text-align: center">
+					<p:commandButton actionListener="#{cmdB.supprimerDetailCmd}"
+						icon="ui-icon-trash" update="listeTable" title="Supprimer">
+						<f:setPropertyActionListener value="#{varServ}"
+							target="#{cmdB.selectedDetailCmd}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</p:fieldset>
+	</h:form>
+
+	<p:dialog id="newDetailCmdDialog" header="Linge Détail CMD"
+		widgetVar="newDetailCmdDialog" showEffect="explode"
+		style="padding-down :5em;" modal="true" hideEffect="explode"
+		height="170" width="500" closable="true">
+
+		<h:form id="newDetailCmdDialogForm" prependId="false">
+			<h:panelGrid columns="2" cellpadding="5" id="panelPPP">
+
+				<p:outputLabel for="Article" value="Article" />
+				<p:selectOneMenu id="Article" value="#{cmdB.selectedArticle}"
+					filter="true" filterMatchMode="contains"
+					converter="entityConverter" height="250" effect="fade" var="p">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems value="#{cmdB.listArticle}" var="art"
+						itemLabel="#{art.libArtArt}" itemValue="#{art}" />
+					<p:column> #{p.codArtArt} -   #{p.libArtArt}   </p:column>
+					<p:ajax event="change" update="gteDisp, prixUnitCmd"
+						immediate="true" />
+				</p:selectOneMenu>
+
+				<h:outputText value="Qté Disponible" />
+				<h:inputText id="gteDisp" label="Qté Disponible"
+					value="#{cmdB.selectedArticle.qteDispArt}">
+				</h:inputText>
+
+				<p:outputLabel value="Prix Unit" />
+				<p:outputLabel id="prixUnitCmd"
+					value="#{cmdB.selectedArticle.prixUnitArt}" />
+
+				<p:outputLabel for="qteCmd" value="Qté Commandée" />
+				<p:inputText id="qteCmd" label="Qté Commandée" value="#{cmdB.qte}">
+				</p:inputText>
+
+
+			</h:panelGrid>
+			<p:separator></p:separator>
+			<h:panelGrid style="display:block; text-align:center" columns="3">
+
+				<p:commandButton value="Quitter" immediate="true"
+					actionListener="#{cmdB.annulerDetail}"
+					oncomplete="PF('newDetailCmdDialog').hide()"></p:commandButton>
+
+				<p:commandButton value="Annuler" type="reset"
+					actionListener="#{cmdB.annulerDetail}" immediate="true"
+					update="@([id$=newDetailCmdDialogForm])" process="@this"></p:commandButton>
+
+				<p:commandButton value="Save"
+					actionListener="#{cmdB.ajouterNouveauDetailCmd}"
+					update="@([id$=newDetailCmdDialogForm]), @([id$=panelConsultCmd]) "
+					process="@([id$=newDetailCmdDialogForm)"
+					oncomplete="if (!args.validationFailed) PF('newDetailCmdDialog').hide();"
+					icon="ui-icon-check" />
+
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+
+</h:body>
+</html>
+

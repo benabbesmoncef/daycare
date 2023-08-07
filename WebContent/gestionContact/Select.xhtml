@@ -1,0 +1,36 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+
+</h:head>
+
+<h:form id="helloForm">
+	<h:panelGrid columns="4" cellpadding="15">
+		<p:outputLabel value="Responsable " />
+
+		<p:inputText id="matriculeResp" value="#{ctB.matricule}"
+			style="width:50px">
+		</p:inputText>
+		<p:inputText id="nomResp" value="#{ctB.nom}"
+			style="width:250px">
+		</p:inputText>
+		<p:selectOneMenu id="menuResp" style="width:250px"
+			value="#{ctB.selectedCt}" filter="true" filterMatchMode="contains"
+			height="250" effect="fade" converter="entityConverter">
+			<f:selectItem itemLabel="" itemValue=""></f:selectItem>
+			<f:selectItems value="#{ctB.listContact}" var="pers"
+				itemLabel="#{pers.numMatCnt} - #{pers.nomNomCnt}  #{pers.nomPrnCnt}"
+				itemValue="#{pers}" />
+			<p:ajax update="matriculeResp, nomResp"
+				listener="#{ctB.stateChangeListenerMetier}"></p:ajax>
+		</p:selectOneMenu>
+	</h:panelGrid>
+</h:form>
+
+</html>
+

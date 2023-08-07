@@ -1,0 +1,157 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+
+</h:head>
+<h:form id="form">
+	<p:separator></p:separator>
+	<h2 style="text-align: center;">Gestion Article</h2>
+	<p:separator></p:separator>
+
+	<p:panel id="panelNewArticle">
+		<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0">
+			<h:outputText value="Code Article : " />
+			<h:inputText id="idCod" value="#{artB.art.codArtArt}" />
+			<h:outputText value="Libelle Article : " />
+			<h:inputText id="idLib" value="#{artB.art.libArtArt}" />
+			<h:outputText value="Prix Unitaire : " />
+			<h:inputText id="idPfrix" value="#{artB.art.prixUnitArt}" />
+			<h:outputText value="Qté disponible : " />
+			<h:inputText id="idQté" value="#{artB.art.qteDispArt}" />
+		</h:panelGrid>
+
+		<h:panelGrid style="display:block; text-align:center" columns="3">
+			<p:commandButton value="Quitter" action="#{artB.quitter}"
+				immediate="true" icon="ui-icon-circle-arrow-w"></p:commandButton>
+			<p:commandButton value="Annuler" type="reset"
+				action="#{artB.annuler}" update="panelNewContact" immediate="true"
+				icon="ui-icon-arrowrefresh-1-n"></p:commandButton>
+			<p:commandButton value="Save" action="#{artB.addArticle}"
+				update="panelNewArticle,datatAticle" icon="ui-icon-circle-check" />
+		</h:panelGrid>
+
+	</p:panel>
+
+
+	<p:growl id="msgs" showDetail="true" />
+	<p:dataTable id="datatAticle" var="var" value="#{artB.listrArt}"
+		widgetVar="articlesTable"
+		emptyMessage="No article found with given criteria" editable="true"
+		style="margin-bottom:20px">
+
+		<f:facet name="header">
+		Liste Des Applications
+<p:commandButton id="toggler" type="button" value="Columns"
+				style="float:right" icon="ui-icon-calculator" />
+			<p:columnToggler datasource="datatAticle" trigger="toggler" />
+
+		</f:facet>
+
+		<p:ajax event="rowEdit" listener="#{artB.onRowEdit}"
+			update=":form:msgs" />
+		<p:ajax event="rowEditCancel" listener="#{artB.onRowCancel}"
+			update=":form:msgs" />
+
+		<p:ajax event="cellEdit" listener="#{artB.onCellEdit}"
+			update=":form:msgs" />
+
+		<p:column headerText="Code Article" sortBy="#{var.codArtArt}">
+			<p:cellEditor>
+				<f:facet name="output">
+					<h:outputText value="#{var.codArtArt}" />
+				</f:facet>
+				<f:facet name="input">
+					<p:inputText value="#{var.codArtArt}" />
+				</f:facet>
+			</p:cellEditor>
+		</p:column>
+
+		<p:column headerText="Libelle Art-icle " sortBy="#{var.libArtArt}">
+			<p:cellEditor>
+				<f:facet name="output">
+					<h:outputText value="#{var.libArtArt}" />
+				</f:facet>
+				<f:facet name="input">
+					<p:inputText value="#{var.libArtArt}" />
+				</f:facet>
+			</p:cellEditor>
+		</p:column>
+
+		<p:column headerText="Prix Unit" sortBy="#{var.prixUnitArt}">
+			<p:cellEditor>
+				<f:facet name="output">
+					<h:outputText value="#{var.prixUnitArt}" />
+				</f:facet>
+				<f:facet name="input">
+					<p:inputText value="#{var.prixUnitArt}" />
+
+				</f:facet>
+			</p:cellEditor>
+		</p:column>
+ 
+		<p:column headerText="Qté" sortBy="#{var.qteDispArt}">
+			<p:cellEditor>
+				<f:facet name="output">
+					<h:outputText value="#{var.qteDispArt}" />
+				</f:facet>
+				<f:facet name="input">
+					<p:inputText value="#{var.qteDispArt}" />
+				</f:facet>
+			</p:cellEditor>
+		</p:column>
+
+		<p:column headerText="MAJ" style="width:32px">
+			<p:rowEditor />
+		</p:column>
+
+		<p:column headerText="Supprimer" style="width:32px;text-align: center">
+			<p:commandButton update=":form:artPanelDetail"
+				oncomplete="PF('artDialog').show()" icon="ui-icon-search"
+				title="View">
+				<f:setPropertyActionListener value="#{var}"
+					target="#{artB.selectedArt}" />
+			</p:commandButton>
+		</p:column>
+
+	</p:dataTable>
+
+	<p:dialog header="Article Info" widgetVar="artDialog" modal="true"
+		showEffect="fade" hideEffect="fade" resizable="false">
+		<p:outputPanel id="artPanelDetail" style="text-align:center;">
+			<p:panelGrid columns="2">
+
+				<h:outputText value="ID:" />
+				<h:outputText value="#{artB.selectedArt.codArtArt}" />
+
+				<h:outputText value="Libellé" />
+				<h:outputText value="#{artB.selectedArt.libArtArt}" />
+				<h:outputText value="Prix Unit" />
+				<h:outputText value="#{artB.selectedArt.prixUnitArt}" />
+				<h:outputText value="Qté Disponible" />
+				<h:outputText value="#{artB.selectedArt.qteDispArt}" />
+			</p:panelGrid>
+			<p></p>
+			<p></p>
+			<p:commandButton value="Quitter" immediate="true"
+				actionListener="#{artB.annuler}" oncomplete="PF('artDialog').hide()"></p:commandButton>
+			<p:commandButton value="Annuler" type="reset"
+				actionListener="#{artB.annuler}" immediate="true"
+				update="artPanelDetail" process="@this"></p:commandButton>
+
+			<p:commandButton value="Supprimer" action="#{artB.deleteArticle}"
+				update="datatAticle" icon="ui-icon-circle-check"
+				oncomplete="PF('artDialog').hide()" />
+		</p:outputPanel>
+	</p:dialog>
+
+
+
+
+</h:form>
+</html>
+

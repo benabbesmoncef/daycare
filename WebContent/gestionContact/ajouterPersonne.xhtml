@@ -1,0 +1,46 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+
+</h:head>
+<h:form id="helloForm">
+	<p:separator></p:separator>
+	<h2 style="text-align: center;">Ajout D'un Nouveau Personne</h2>
+	<p:separator></p:separator>
+	
+	<p:panel id="panelNewPersonne">
+		<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0">
+			<h:outputText value="Marticule : " />
+			<h:inputText id="idMat" value="#{prB.pr.matricule}" />
+			<h:outputText value="Nom : " />
+			<h:inputText id="idNom" value="#{prB.pr.nom}" />
+			<h:outputText value="Prenom : " />
+			<h:inputText id="idPre" value="#{prB.pr.prenom}" />
+		
+		</h:panelGrid>
+
+
+			<h:panelGrid style="display:block; text-align:center" columns="3">
+				<p:commandButton value="Quitter"
+					action="#{prB.quitter}" immediate="true"
+					icon="ui-icon-circle-arrow-w"></p:commandButton>
+				<p:commandButton value="Annuler" type="reset"
+					action="#{prB.annuler}"
+					update="panelNewPersonne" immediate="true"
+					icon="ui-icon-arrowrefresh-1-n"></p:commandButton>
+				<p:commandButton value="Save"
+					action="#{prB.ajouter}"
+					update="panelNewPersonne"
+					icon="ui-icon-circle-check" />
+			</h:panelGrid>
+			
+	</p:panel>
+
+</h:form>
+</html>
+
